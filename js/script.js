@@ -8,8 +8,53 @@ const historyContainer = document.getElementById("history-container");
 const historyList = document.getElementById("history-list");
 const resultsContainer = document.getElementById("results-container");
 
-// Dados de teste para simular buscas salvas (Sprint 6 vai evoluir isso).
-const savedSearches = ["java", "joao", "python"];
+// Configuracoes do historico salvo no navegador.
+const HISTORY_STORAGE_KEY = "github-user-finder-history";
+const MAX_HISTORY_ITEMS = 5;
+
+// Carrega historico salvo no localStorage (ou inicia vazio).
+function loadSavedSearches() {
+  try {
+    const rawHistory = localStorage.getItem(HISTORY_STORAGE_KEY);
+    const parsedHistory = JSON.parse(rawHistory || "[]");
+
+    return Array.isArray(parsedHistory) ? parsedHistory : [];
+  } catch (error) {
+    console.error("Erro ao carregar historico salvo:", error);
+    return [];
+  }
+}
+
+// Estado em memoria do historico, sincronizado com localStorage.
+const savedSearches = loadSavedSearches();
+
+// Persiste o historico atual no navegador.
+function persistHistory() {
+  localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(savedSearches));
+}
+
+// Adiciona uma nova busca, remove duplicados e limita para ultimas 5.
+function addSearchToHistory(term) {
+  const normalizedTerm = term.toLowerCase();
+  const existingIndex = savedSearches.findIndex(
+    (item) => item.toLowerCase() === normalizedTerm
+  );
+
+  // Se ja existe no historico, remove para recolocar no topo.
+  if (existingIndex !== -1) {
+    savedSearches.splice(existingIndex, 1);
+  }
+
+  // Insere a busca mais recente no inicio da lista.
+  savedSearches.unshift(term);
+
+  // Mantem apenas as ultimas N buscas definidas.
+  if (savedSearches.length > MAX_HISTORY_ITEMS) {
+    savedSearches.length = MAX_HISTORY_ITEMS;
+  }
+
+  persistHistory();
+}
 
 // Monta visualmente a lista de historico no container.
 function renderHistory() {
@@ -18,9 +63,9 @@ function renderHistory() {
   savedSearches.forEach((term) => {
     const item = document.createElement("li");
     item.textContent = term;
+    item.dataset.term = term;
     historyList.appendChild(item);
   });
- 
 }
 
 // Mostra historico apenas se existir conteudo salvo.
@@ -33,6 +78,29 @@ function showHistoryIfAllowed() {
 // Esconde historico quando clicar fora da area de busca.
 function hideHistory() {
   historyContainer.classList.add("hidden");
+}
+
+// Executa o fluxo completo de busca para reutilizar no submit e no clique do historico.
+async function executeSearch(term) {
+  // Valida campo vazio: interrompe fluxo e nao executa busca.
+  if (!term) {
+    console.warn("Busca vazia. Digite um termo antes de buscar.");
+    return;
+  }
+
+  // Salva a busca, atualiza historico visual e mostra container quando permitido.
+  addSearchToHistory(term);
+  renderHistory();
+  showHistoryIfAllowed();
+
+  // Chama a API com o termo digitado e recebe usuarios encontrados.
+  const users = await searchUsers(term);
+
+  // Mostra retorno no console para validar antes de evoluir UI.
+  console.log(users);
+
+  // Exibe cards dinamicos na tela com os usuarios da busca.
+  renderUsers(users);
 }
 
 // Funcao de busca: recebe termo, consulta API e retorna lista limitada de usuarios.
@@ -94,21 +162,9 @@ searchForm.addEventListener("submit", async (event) => {
   // Le o valor digitado e remove espacos extras no inicio/fim.
   const searchTerm = searchInput.value.trim();
 
-  // Valida campo vazio: interrompe fluxo e nao executa busca.
-  if (!searchTerm) {
-    console.warn("Busca vazia. Digite um termo antes de buscar.");
-    return;
-  }
-
   try {
-    // Chama a API com o termo digitado e recebe usuarios encontrados.
-    const users = await searchUsers(searchTerm);
-
-    // Mostra retorno no console para validar antes de evoluir UI.
-    console.log(users);
-
-    // Exibe cards dinamicos na tela com os usuarios da busca.
-    renderUsers(users);
+    // Dispara o fluxo completo de busca.
+    await executeSearch(searchTerm);
   } catch (error) {
     // Log de erro para facilitar debug durante desenvolvimento.
     console.error("Erro ao buscar usuarios:", error);
@@ -123,6 +179,25 @@ renderHistory();
 
 // Exibe historico ao focar no input de busca.
 searchInput.addEventListener("focus", showHistoryIfAllowed);
+
+// Permite clicar em um item do historico para pesquisar novamente.
+historyList.addEventListener("click", async (event) => {
+  const clickedItem = event.target.closest("li");
+
+  if (!clickedItem) {
+    return;
+  }
+
+  const selectedTerm = clickedItem.dataset.term || clickedItem.textContent.trim();
+
+  try {
+    await executeSearch(selectedTerm);
+    searchInput.value = "";
+    hideHistory();
+  } catch (error) {
+    console.error("Erro ao pesquisar termo do historico:", error);
+  }
+});
 
 // Controle global para esconder historico ao clicar fora da busca.
 document.addEventListener("click", (event) => {
