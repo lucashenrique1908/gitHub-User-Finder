@@ -151,9 +151,64 @@ body {
   border-radius: 10px;
   padding: 10px;
   max-height: 350px;
+  min-height: 140px;
   overflow-y: auto;
   display: grid;
   gap: 10px;
+}
+
+/* Bloco de feedback visual para loading, erro e sem resultados */
+.result-feedback {
+  min-height: 118px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.result-feedback p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.feedback-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.result-feedback.loading {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.result-feedback.loading .feedback-icon {
+  background: #dbeafe;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.result-feedback.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.result-feedback.error .feedback-icon {
+  background: #fee2e2;
+}
+
+.result-feedback.empty {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.result-feedback.empty .feedback-icon {
+  background: #e2e8f0;
 }
 
 /* Card base de usuario dentro da lista de resultados */
@@ -188,6 +243,24 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 50%;
+}
+
+/* Animacao suave para o estado de carregamento */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
 }
 
 /* Pequeno ajuste para telas menores */

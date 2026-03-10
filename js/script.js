@@ -80,6 +80,24 @@ function hideHistory() {
   historyContainer.classList.add("hidden");
 }
 
+// Renderiza mensagens de estado no container (loading, erro, vazio).
+function renderResultFeedback(message, type) {
+  const stateIcons = {
+    loading: "...",
+    error: "!",
+    empty: "i",
+  };
+
+  const icon = stateIcons[type] || "i";
+
+  resultsContainer.innerHTML = `
+    <div class="result-feedback ${type}">
+      <span class="feedback-icon" aria-hidden="true">${icon}</span>
+      <p>${message}</p>
+    </div>
+  `;
+}
+
 // Executa o fluxo completo de busca para reutilizar no submit e no clique do historico.
 async function executeSearch(term) {
   // Valida campo vazio: interrompe fluxo e nao executa busca.
@@ -92,6 +110,9 @@ async function executeSearch(term) {
   addSearchToHistory(term);
   renderHistory();
   showHistoryIfAllowed();
+
+  // Mostra estado de loading enquanto aguarda resposta da API.
+  renderResultFeedback("Buscando usuarios...", "loading");
 
   // Chama a API com o termo digitado e recebe usuarios encontrados.
   const users = await searchUsers(term);
@@ -131,7 +152,7 @@ function renderUsers(users) {
 
   // Se nao houver usuarios, mostra um aviso simples.
   if (users.length === 0) {
-    resultsContainer.innerHTML = "<p>Nenhum usuario encontrado.</p>";
+    renderResultFeedback("Nenhum usuario encontrado.", "empty");
     return;
   }
 
@@ -168,6 +189,9 @@ searchForm.addEventListener("submit", async (event) => {
   } catch (error) {
     // Log de erro para facilitar debug durante desenvolvimento.
     console.error("Erro ao buscar usuarios:", error);
+
+    // Mostra estado visual de erro quando a API falhar.
+    renderResultFeedback("Erro ao buscar usuarios.", "error");
   } finally {
     // Limpa o input apos clicar em Buscar ou pressionar Enter.
     searchInput.value = "";
@@ -196,6 +220,7 @@ historyList.addEventListener("click", async (event) => {
     hideHistory();
   } catch (error) {
     console.error("Erro ao pesquisar termo do historico:", error);
+    renderResultFeedback("Erro ao buscar usuarios.", "error");
   }
 });
 
