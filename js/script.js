@@ -90,6 +90,9 @@ function renderResultFeedback(message, type) {
 
   const icon = stateIcons[type] || "i";
 
+  // Atualiza estado de carregamento para tecnologias assistivas.
+  resultsContainer.setAttribute("aria-busy", type === "loading" ? "true" : "false");
+
   resultsContainer.innerHTML = `
     <div class="result-feedback ${type}">
       <span class="feedback-icon" aria-hidden="true">${icon}</span>
@@ -106,10 +109,12 @@ async function executeSearch(term) {
     return;
   }
 
+  // Fecha historico durante a busca para manter a interface limpa.
+  hideHistory();
+
   // Salva a busca, atualiza historico visual e mostra container quando permitido.
   addSearchToHistory(term);
   renderHistory();
-  showHistoryIfAllowed();
 
   // Mostra estado de loading enquanto aguarda resposta da API.
   renderResultFeedback("Buscando usuarios...", "loading");
@@ -149,6 +154,7 @@ async function searchUsers(term) {
 function renderUsers(users) {
   // Limpa resultados antigos antes de inserir novos cards.
   resultsContainer.innerHTML = "";
+  resultsContainer.setAttribute("aria-busy", "false");
 
   // Se nao houver usuarios, mostra um aviso simples.
   if (users.length === 0) {
@@ -166,7 +172,14 @@ function renderUsers(users) {
       <img src="${user.avatar_url}" alt="Avatar de ${user.login}">
       <div>
         <h3>${user.login}</h3>
-        <a href="${user.html_url}" target="_blank" rel="noopener noreferrer">Ver perfil</a>
+        <a
+          href="${user.html_url}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Abrir perfil de ${user.login} no GitHub (abre em nova aba)"
+        >
+          Ver perfil
+        </a>
       </div>
     `;
 
@@ -195,6 +208,8 @@ searchForm.addEventListener("submit", async (event) => {
   } finally {
     // Limpa o input apos clicar em Buscar ou pressionar Enter.
     searchInput.value = "";
+    // Mantem foco para permitir nova busca rapida.
+    searchInput.focus();
   }
 });
 
@@ -213,14 +228,18 @@ historyList.addEventListener("click", async (event) => {
   }
 
   const selectedTerm = clickedItem.dataset.term || clickedItem.textContent.trim();
+  // Fecha historico imediatamente ao clicar para UX mais limpa.
+  hideHistory();
 
   try {
     await executeSearch(selectedTerm);
     searchInput.value = "";
-    hideHistory();
+    // Mantem foco no input para facilitar nova busca em sequencia.
+    searchInput.focus();
   } catch (error) {
     console.error("Erro ao pesquisar termo do historico:", error);
     renderResultFeedback("Erro ao buscar usuarios.", "error");
+    searchInput.focus();
   }
 });
 

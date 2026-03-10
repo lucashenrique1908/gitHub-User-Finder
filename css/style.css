@@ -276,4 +276,16 @@ body {
   .search-form button {
     height: 42px;
   }
+
+  /* Em mobile, organiza avatar + username + link em coluna */
+  .user-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .user-card img {
+    width: 52px;
+    height: 52px;
+  }
 }
