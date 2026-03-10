@@ -1,5 +1,76 @@
+/* Estilo base: fonte padrao e espacamento geral da pagina */
 body {
   font-family: Arial, sans-serif;
   margin: 16px;
+  line-height: 1.4;
+}
 
+/* Estrutura principal para organizar os blocos por secao */
+.app-main {
+  display: grid;
+  gap: 16px;
+  max-width: 720px;
+}
+
+/* Area de busca com input e botao lado a lado */
+.search-form {
+  display: flex;
+  gap: 8px;
+}
+
+.search-form input {
+  flex: 1;
+}
+
+/* Historico inicia oculto; JS controla quando mostrar */
+.hidden {
+  display: none;
+}
+
+.history-container {
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.history-container ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.history-container li {
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Hover suave para nao ficar chamativo */
+.history-container li:hover {
+  background: #f3f5f7;
+}
+
+/* Container de resultados com scroll quando tiver muitos cards */
+.results-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* Estrutura basica de cada card de usuario */
+.user-card {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.user-card img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
 }
