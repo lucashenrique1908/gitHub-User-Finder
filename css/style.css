@@ -61,13 +61,13 @@ body {
 }
 
 /* Estrutura basica de cada card de usuario */
-.user-card {
+ .user-card {
   display: flex;
   gap: 12px;
   padding: 10px;
   border: 1px solid #eee;
   border-radius: 8px;
-}
+} 
 
 .user-card img {
   width: 56px;
