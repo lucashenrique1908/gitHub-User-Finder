@@ -1,12 +1,5 @@
 /* Base da pagina: fonte, fundo e espacamento externo */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 24px;
-  line-height: 1.4;
-  background: #f5f7fb;
-  color: #1f2937;
-}
+
 
 /* Container central da aplicacao */
 .app-shell {
