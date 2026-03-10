@@ -6,6 +6,7 @@ const searchForm = document.querySelector(".search-form");
 const searchInput = document.getElementById("search-input");
 const historyContainer = document.getElementById("history-container");
 const historyList = document.getElementById("history-list");
+const resultsContainer = document.getElementById("results-container");
 
 // Dados de teste para simular buscas salvas (Sprint 6 vai evoluir isso).
 const savedSearches = ["java", "joao", "python"];
@@ -55,6 +56,36 @@ async function searchUsers(term) {
   return users;
 }
 
+// Renderiza a lista de usuarios no container de resultados.
+function renderUsers(users) {
+  // Limpa resultados antigos antes de inserir novos cards.
+  resultsContainer.innerHTML = "";
+
+  // Se nao houver usuarios, mostra um aviso simples.
+  if (users.length === 0) {
+    resultsContainer.innerHTML = "<p>Nenhum usuario encontrado.</p>";
+    return;
+  }
+
+  // Cria um card para cada usuario retornado pela API.
+  users.forEach((user) => {
+    const card = document.createElement("article");
+    card.className = "user-card";
+
+    // Campos usados: avatar, username (login) e link do perfil.
+    card.innerHTML = `
+      <img src="${user.avatar_url}" alt="Avatar de ${user.login}">
+      <div>
+        <h3>${user.login}</h3>
+        <a href="${user.html_url}" target="_blank" rel="noopener noreferrer">Ver perfil</a>
+      </div>
+    `;
+
+    // Insere card no container principal de resultados.
+    resultsContainer.appendChild(card);
+  });
+}
+
 // Captura a tentativa de busca (botao Buscar ou tecla Enter).
 searchForm.addEventListener("submit", async (event) => {
   // Impede reload da pagina causado pelo comportamento padrao do form.
@@ -73,8 +104,11 @@ searchForm.addEventListener("submit", async (event) => {
     // Chama a API com o termo digitado e recebe usuarios encontrados.
     const users = await searchUsers(searchTerm);
 
-    // Nesta sprint, apenas valida no console os usuarios retornados.
+    // Mostra retorno no console para validar antes de evoluir UI.
     console.log(users);
+
+    // Exibe cards dinamicos na tela com os usuarios da busca.
+    renderUsers(users);
   } catch (error) {
     // Log de erro para facilitar debug durante desenvolvimento.
     console.error("Erro ao buscar usuarios:", error);

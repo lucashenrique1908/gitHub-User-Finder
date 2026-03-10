@@ -145,16 +145,6 @@ body {
   margin: 0;
 }
 
-.example-tag {
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #92400e;
-  background: #fef3c7;
-  border: 1px solid #fde68a;
-}
-
 /* Container principal de resultados com scroll */
 .results-container {
   border: 1px solid #e5e7eb;
