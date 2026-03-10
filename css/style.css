@@ -1,37 +1,118 @@
-/* Estilo base: fonte padrao e espacamento geral da pagina */
+/* Base da pagina: fonte, fundo e espacamento externo */
 body {
   font-family: Arial, sans-serif;
-  margin: 16px;
+  margin: 0;
+  padding: 24px;
   line-height: 1.4;
+  background: #f5f7fb;
+  color: #1f2937;
 }
 
-/* Estrutura principal para organizar os blocos por secao */
+/* Container central da aplicacao */
+.app-shell {
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+
+/* Header com cara de aplicacao (hierarquia + separacao visual) */
+.app-header {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.app-kicker {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(1.3rem, 1rem + 1.1vw, 1.9rem);
+}
+
+/* Estrutura principal em secoes */
 .app-main {
   display: grid;
   gap: 16px;
-  max-width: 720px;
 }
 
-/* Area de busca com input e botao lado a lado */
+/* Blocos de busca e resultados com cartao branco */
+.search-section,
+.results-section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* Titulo de secao */
+.search-section h2,
+.results-section h2 {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+}
+
+/* Input e botao na mesma linha, com espacamento */
 .search-form {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
+/* Input com visual moderno */
 .search-form input {
   flex: 1;
+  padding: 11px 13px;
+  border: 1px solid #cfd6df;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* Historico inicia oculto; JS controla quando mostrar */
+/* Destaque de foco para acessibilidade e feedback visual */
+.search-form input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* Botao com estilo proprio */
+.search-form button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background: #1d4ed8;
+}
+
+/* Historico inicia oculto e o JS controla quando exibir */
 .hidden {
   display: none;
 }
 
+/* Container de historico logo abaixo do input */
 .history-container {
-  margin-top: 8px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.history-container p {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: #4b5563;
 }
 
 .history-container ul {
@@ -41,36 +122,95 @@ body {
 }
 
 .history-container li {
-  padding: 6px 8px;
-  border-radius: 6px;
+  padding: 7px 9px;
+  border-radius: 7px;
   cursor: pointer;
 }
 
-/* Hover suave para nao ficar chamativo */
+/* Hover suave para destaque discreto do historico */
 .history-container li:hover {
   background: #f3f5f7;
 }
 
-/* Container de resultados com scroll quando tiver muitos cards */
-.results-container {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 8px;
-  max-height: 320px;
-  overflow-y: auto;
+/* Cabecalho da area de resultados com tag de exemplo */
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
 }
 
-/* Estrutura basica de cada card de usuario */
- .user-card {
+.results-header h2 {
+  margin: 0;
+}
+
+.example-tag {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+}
+
+/* Container principal de resultados com scroll */
+.results-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+  display: grid;
+  gap: 10px;
+}
+
+/* Card base de usuario dentro da lista de resultados */
+.user-card {
   display: flex;
   gap: 12px;
   padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-} 
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+}
+
+.user-card h3 {
+  margin: 0 0 4px;
+}
+
+.user-card p {
+  margin: 0 0 6px;
+  color: #6b7280;
+}
+
+.user-card a {
+  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.user-card a:hover {
+  text-decoration: underline;
+}
 
 .user-card img {
   width: 56px;
   height: 56px;
   border-radius: 50%;
+}
+
+/* Pequeno ajuste para telas menores */
+@media (max-width: 560px) {
+  body {
+    padding: 14px;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-form button {
+    height: 42px;
+  }
 }
