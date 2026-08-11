@@ -1,32 +1,21 @@
-# GitHub User Finder
+GitHub User Finder
 
-GitHub User Finder is a web application that allows users to search for GitHub profiles using the official GitHub API.
+A simple web application that allows users to search for GitHub profiles using the GitHub REST API.
 
-The application displays user results dynamically, stores recent searches locally in the browser, and provides a simple and responsive interface for exploring GitHub accounts.
+The application dynamically displays user information, handles loading, error and empty states, and stores recent searches in the browser for quick access.
 
-## Live Project
+Technologies
+HTML5
+CSS3
+JavaScript (ES6+)
+GitHub REST API
+localStorage
+Features
+Search GitHub users by username
+Fetch and display data from the GitHub API
+Search history with localStorage
+Loading, error and empty states
+Responsive interface
+Live Demo
 
 https://lucashenrique1908.github.io/gitHub-User-Finder/
-
-## Repository
-
-https://github.com/lucashenrique1908/gitHub-User-Finder.git
-
-## Features
-
-- Search GitHub users by username
-- Dynamic results rendered from the GitHub API
-- Search history stored using localStorage
-- Clickable search history to repeat searches
-- Loading, error and empty result states
-- Responsive interface for mobile and desktop
-
-## Technologies
-
-- HTML5
-- CSS3
-- JavaScript (ES6+)
-- GitHub REST API
-- LocalStorage
-
-## Project Structure
